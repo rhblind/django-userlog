@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import userlog
+
 from django.conf import settings
 from django.db import models
 from django.dispatch import dispatcher, receiver
@@ -49,10 +50,9 @@ class UserLogMixin(object):
         """
         
         ctype, pk = ContentType.objects.get_for_model(self), self.pk
-        qset = UserLogEntry.objects.select_related("content_type", "user") \
-                    .filter(content_type=ctype, object_id=smart_unicode(pk),
-                            site__pk=settings.SITE_ID)
-        return qset
+        queryset = UserLogEntry.objects.select_related("content_type", "user") \
+            .filter(content_type=ctype, object_id=smart_unicode(pk), site__pk=settings.SITE_ID)
+        return queryset
 
 
 class UserLogEntry(LogEntry):
